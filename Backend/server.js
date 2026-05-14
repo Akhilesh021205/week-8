@@ -9,6 +9,11 @@ const app = exp();
 app.use(cors());
 app.use(exp.json());
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ message: "Server is running" });
+});
+
 // user routes
 app.use("/user-api", userRoute);
 
@@ -48,12 +53,18 @@ app.use((req, res) => {
 });
 
 const connectDB = async () => {
-  await connect(process.env.DB_URL);
-  console.log("DB connected");
+  try {
+    await connect(process.env.DB_URL);
+    console.log("DB connected");
 
-  app.listen(process.env.PORT, () =>
-    console.log("Server running on port", process.env.PORT)
-  );
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () =>
+      console.log("Server running on port", PORT)
+    );
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    process.exit(1);
+  }
 };
 
 connectDB();
