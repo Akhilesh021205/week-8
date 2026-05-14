@@ -4,15 +4,25 @@ import { UserModel } from "../Models/UserModel.js";
 const userAPI = exp.Router();
 
 // CREATE USER
-userAPI.post("/user", async (req, res) => {
-  let newUser = req.body;
-  let newUserDoc = new UserModel(newUser);
-  await newUserDoc.save();
-  res.status(201).json({ message: "user created", payload: newUserDoc });
+userAPI.post("/users", async (req, res) => {
+  try {
+    let newUser = req.body;
+    let newUserDoc = new UserModel(newUser);
+    await newUserDoc.save();
+    res.status(201).json({ message: "user created", payload: newUserDoc });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: error.errors,
+      });
+    }
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 // READ ALL USERS
-userAPI.get("/user", async (req, res) => {
+userAPI.get("/users", async (req, res) => {
   let userList = await UserModel.find();
   res.status(200).json({ message: "users", payload: userList });
 });
@@ -58,7 +68,7 @@ userAPI.patch("/users/:id",async (req,res)=>{
     { $set: modifiedUser },
     { new: true }
   );
-  res.status(200).json({ message: "user activated", payload: user });
+  res.status(200).json({ message: "user activated", payload: User });
 })
 
 export default userAPI;

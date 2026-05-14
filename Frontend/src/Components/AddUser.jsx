@@ -3,9 +3,10 @@ import React, { useState } from "react";
 function AddUser() {
   const [formData, setFormData] = useState({
     name: "",
-    dob: "",
+    dateOfBirth: "",
     email: "",
-    mobile: ""
+    mobileNumber: "",
+    age: ""
   });
 
   // handle input change
@@ -17,10 +18,31 @@ function AddUser() {
   };
 
   // handle submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // you can replace with API call
-    alert("Form Submitted ✅");
+
+    try {
+      const res = await fetch("http://localhost:5000/user-api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to create user");
+      }
+
+      const data = await res.json();
+      console.log("User created", data);
+      alert("User added successfully ✅");
+      setFormData({ name: "", dateOfBirth: "", email: "", mobileNumber: "", age: "" });
+    } catch (error) {
+      console.error("Error submitting user:", error);
+      alert("Failed to add user. Please try again.");
+    }
   };
 
   return (
@@ -49,8 +71,21 @@ function AddUser() {
           <label className="block mb-1 font-medium">Date of Birth</label>
           <input
             type="date"
-            name="dob"
-            value={formData.dob}
+            name="dateOfBirth"
+            value={formData.dateOfBirth}
+            onChange={handleChange}
+            required
+            className="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Age */}
+        <div>
+          <label className="block mb-1 font-medium">Age</label>
+          <input
+            type="number"
+            name="age"
+            value={formData.age}
             onChange={handleChange}
             required
             className="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -75,8 +110,8 @@ function AddUser() {
           <label className="block mb-1 font-medium">Mobile Number</label>
           <input
             type="tel"
-            name="mobile"
-            value={formData.mobile}
+            name="mobileNumber"
+            value={formData.mobileNumber}
             onChange={handleChange}
             pattern="[0-9]{10}"
             maxLength="10"

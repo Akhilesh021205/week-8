@@ -14,9 +14,12 @@ function UserList() {
           },
         });
 
-        const data = await res.json();
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || "Failed to fetch users");
+        }
 
-        // If your backend sends: { message: "users", payload: [...] }
+        const data = await res.json();
         setUsers(data.payload || data);
       } catch (error) {
         console.error("Error fetching users:", error);

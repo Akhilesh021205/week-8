@@ -2,10 +2,11 @@ import exp from "express";
 import { connect } from "mongoose";
 import { config } from "dotenv";
 import userRoute from "./APIs/userapi.js";
-import cors from "cors"
+import cors from "cors";
 config();
 const app = exp();
 
+app.use(cors());
 app.use(exp.json());
 
 // user routes
