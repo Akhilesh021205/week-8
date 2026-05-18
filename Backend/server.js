@@ -8,6 +8,7 @@ const app = exp();
 
 app.use(cors());
 app.use(exp.json());
+app.use(exp.urlencoded({ extended: true }));
 
 // Health check endpoint
 app.get("/health", (req, res) => {
@@ -19,6 +20,7 @@ app.use("/user-api", userRoute);
 
 // Global error handler
 app.use((err, req, res, next) => {
+  console.error("Backend Error Occurred:", err);
 
   // Mongoose validation error
   if (err.name === "ValidationError") {

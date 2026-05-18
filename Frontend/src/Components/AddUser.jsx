@@ -30,12 +30,25 @@ function AddUser() {
         );
       }
 
+      // Normalize dateOfBirth to YYYY-MM-DD format to ensure strict MongoDB compatibility
+      let payload = { ...formData };
+      if (payload.dateOfBirth && typeof payload.dateOfBirth === "string") {
+        const parts = payload.dateOfBirth.split("-");
+        // If year is at the end (DD-MM-YYYY or MM-DD-YYYY)
+        if (parts.length === 3 && parts[2].length === 4) {
+          const part1 = parts[0];
+          const part2 = parts[1];
+          const year = parts[2];
+          payload.dateOfBirth = `${year}-${part2.padStart(2, "0")}-${part1.padStart(2, "0")}`;
+        }
+      }
+
       const res = await fetch(`${apiUrl}/user-api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
