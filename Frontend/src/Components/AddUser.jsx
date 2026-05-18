@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getApiUrl } from "../apiConfig";
 
 function AddUser() {
   const [formData, setFormData] = useState({
@@ -22,7 +23,13 @@ function AddUser() {
     e.preventDefault();
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const apiUrl = getApiUrl();
+      if (!apiUrl) {
+        throw new Error(
+          "Backend API URL is not configured. Set VITE_API_URL in production or deploy the backend at the same origin."
+        );
+      }
+
       const res = await fetch(`${apiUrl}/user-api/users`, {
         method: "POST",
         headers: {
@@ -32,8 +39,14 @@ function AddUser() {
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to create user");
+        let errorMessage = "Failed to create user";
+        try {
+          const errorData = await res.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (parseError) {
+          console.error("Failed to parse error response:", parseError);
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await res.json();
@@ -42,7 +55,7 @@ function AddUser() {
       setFormData({ name: "", dateOfBirth: "", email: "", mobileNumber: "", age: "" });
     } catch (error) {
       console.error("Error submitting user:", error);
-      alert("Failed to add user. Please try again.");
+      alert(`Failed to add user. ${error.message}`);
     }
   };
 

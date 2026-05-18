@@ -52,19 +52,28 @@ app.use((req, res) => {
   res.status(404).json({ message: "Invalid path" });
 });
 
+// Connect to MongoDB (Mongoose buffers queries, so routes work even before connection is established)
 const connectDB = async () => {
   try {
+    if (!process.env.DB_URL) {
+      console.warn("WARNING: DB_URL environment variable is not defined!");
+      return;
+    }
     await connect(process.env.DB_URL);
     console.log("DB connected");
-
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () =>
-      console.log("Server running on port", PORT)
-    );
   } catch (error) {
     console.error("Database connection failed:", error);
-    process.exit(1);
   }
 };
 
 connectDB();
+
+// Only start the listener if we are running locally (not in Vercel serverless environment)
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () =>
+    console.log("Server running on port", PORT)
+  );
+}
+
+export default app;

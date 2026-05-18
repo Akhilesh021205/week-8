@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import User from "./User";
+import { getApiUrl } from "../apiConfig";
 
 function UserList() {
   const [users, setUsers] = useState([]);
@@ -7,7 +8,13 @@ function UserList() {
   useEffect(() => {
     async function getUsers() {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        const apiUrl = getApiUrl();
+        if (!apiUrl) {
+          throw new Error(
+            "Backend API URL is not configured. Set VITE_API_URL in production or deploy the backend at the same origin."
+          );
+        }
+
         const res = await fetch(`${apiUrl}/user-api/users`, {
           method: "GET",
           headers: {
@@ -16,8 +23,14 @@ function UserList() {
         });
 
         if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || "Failed to fetch users");
+          let errorMessage = "Failed to fetch users";
+          try {
+            const errorData = await res.json();
+            errorMessage = errorData.message || errorMessage;
+          } catch (parseError) {
+            console.error("Failed to parse fetch error response:", parseError);
+          }
+          throw new Error(errorMessage);
         }
 
         const data = await res.json();
