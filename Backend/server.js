@@ -60,7 +60,7 @@ const connectDB = async () => {
       return;
     }
     await connect(process.env.DB_URL);
-    console.log("DB connected");
+    console.log("DB connected successfully");
   } catch (error) {
     console.error("Database connection failed:", error);
   }
