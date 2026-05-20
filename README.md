@@ -1,5 +1,6 @@
 # User Management App
  User Management App  using React.js, Node.js, Express.js, and MongoDB.
+ where multiple users can join.
 
 ## Frontend
 - React.js
