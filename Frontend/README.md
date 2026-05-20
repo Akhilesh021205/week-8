@@ -1,16 +1,73 @@
-# React + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for User Management App
+using React.js, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Features are
+- Add User
+- View Users
+- Responsive UI
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Packages Used
 
-## React Compiler
+Create React App using Vite:
+npm create vite@latest
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Install Dependencies:
+npm install
 
-## Expanding the ESLint configuration
+Install React:
+npm install react react-dom
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Install React Router:
+npm install react-router
+
+Install Tailwind CSS:
+npm install tailwindcss @tailwindcss/vite
+
+Install Vite React Plugin:
+npm install @vitejs/plugin-react
+
+Install ESLint:
+npm install eslint @eslint/js
+
+Install React Hooks ESLint:
+npm install eslint-plugin-react-hooks
+
+Install React Refresh ESLint:
+npm install eslint-plugin-react-refresh
+
+
+### Frontend Folder Structure
+
+- public
+- src
+  - assets
+  - Components
+    - AddUser.jsx
+    - Footer.jsx
+    - Header.jsx
+    - Home.jsx
+    - RootLayout.jsx
+    - User.jsx
+    - UserList.jsx
+  - App.css
+  - App.jsx
+  - index.css
+  - main.jsx
+- node_modules
+- package.json
+- package-lock.json
+- vite.config.js
+- index.html
+
+## To Run Project
+
+npm install
+npm run dev
+
+
+## Environment Variables
+
+env
+VITE_BACKEND_URL=http://localhost:5000
